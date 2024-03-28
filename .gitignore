@@ -72,3 +72,7 @@ coverage.xml
 
 # Django stuff:
 *.log
+
+note.md
+
+Resized/

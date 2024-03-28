@@ -9,7 +9,7 @@ def log_activity(activity):
 # create a function that will go into every folder in the current working directory and compress the images
 
 
-def compress_images(directory=None, quality=80):
+def compress_images(directory=None, quality=80, dimension=512):
     """Recursively compresses all images in a given directory.
 
     Args:
@@ -35,8 +35,10 @@ def compress_images(directory=None, quality=80):
                 try:
                     with Image.open(img_path) as img:
                         width, height = img.size
-                        if width > 512 or height > 512:
-                            scale = 512 / max(width, height)
+                        if width > dimension or height > dimension:
+                            if dimension < 1:
+                                raise ValueError("dimension must be greater than 0")
+                            scale = dimension / max(width, height)
                             new_width = int(width * scale)
                             new_height = int(height * scale)
                             img = img.resize((new_width, new_height))
@@ -53,8 +55,12 @@ def compress_images(directory=None, quality=80):
 
 
 def main():
+    dimension = int(input('Enter the maximum dimension of the images: '))
+    quality = int(input('Enter the quality factor of the images (0-100): '))
+
     log_activity(f'Starting image compression on directory {os.getcwd()}')
-    compress_images()
+    compress_images(directory=os.getcwd(), quality=quality, dimension=dimension)
+    log_activity(f'Finished image compression with max dimension of {dimension}')
     log_activity('Finished image compression')
 
 
